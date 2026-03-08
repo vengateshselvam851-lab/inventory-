@@ -1,0 +1,170 @@
+
+Project Structure
+
+project-folder
+│
+├── controllers
+│   └── userController.js
+│
+├── models
+│   └── userModel.js
+│
+├── routes
+│   └── userRoutes.js
+│
+├── utils
+│   └── logger.js
+│
+├── app.js
+├── server.js
+└── package.json
+
+
+---
+
+package.json
+
+Create using npm init -y
+
+Example:
+
+{
+  "name": "node-project",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
+
+Install express:
+
+npm install express
+
+
+---
+
+server.js
+
+This starts the server.
+
+const app = require('./app');
+
+const PORT = 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+
+---
+
+app.js
+
+Main configuration.
+
+const express = require('express');
+const app = express();
+
+const userRoutes = require('./routes/userRoutes');
+
+app.use(express.json());
+
+app.use('/users', userRoutes);
+
+module.exports = app;
+
+
+---
+
+routes/userRoutes.js
+
+const express = require('express');
+const router = express.Router();
+
+const userController = require('../controllers/userController');
+
+router.get('/', userController.getUsers);
+router.post('/', userController.createUser);
+
+module.exports = router;
+
+
+---
+
+controllers/userController.js
+
+const users = [];
+
+exports.getUsers = (req, res) => {
+    res.json(users);
+};
+
+exports.createUser = (req, res) => {
+    const user = req.body;
+    users.push(user);
+    res.json({ message: "User added", user });
+};
+
+
+---
+
+models/userModel.js
+
+(Simple example)
+
+class User {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+module.exports = User;
+
+
+---
+
+utils/logger.js
+
+const logger = (message) => {
+    console.log(`[LOG]: ${message}`);
+};
+
+module.exports = logger;
+
+
+---
+
+Run the Project
+
+Open terminal:
+
+node server.js
+
+Server runs on:
+
+http://localhost:3000/users
+
+
+---
+
+Example API test:
+
+GET
+
+http://localhost:3000/users
+
+POST
+
+http://localhost:3000/users
+
+Body:
+
+{
+"name":"Agalya",
+"age":20
+}
